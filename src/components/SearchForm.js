@@ -5,7 +5,7 @@ import { TextField, Button } from '@material-ui/core';
 function SearchForm({
     onSubmit,
     onChange,
-    query
+    query,
 }) {
     return (
         <form
@@ -24,24 +24,3 @@ function SearchForm({
 }
 
 export default SearchForm;
-
-// function SearchInput() {
-
-
-//     const onSubmitSeachFormCallback = event => {
-//         event.preventDefault();
-//     }
-//     const onInputChangeCallback = event => {
-//         setQuery(event.target.value)
-//     }
-
-//     fetchWeather(query).then(
-//         ({ cities }) => {
-//             setCities(cities);
-//         }
-//     );
-//     return (
-
-//     )
-// }
-// export default SearchInput;

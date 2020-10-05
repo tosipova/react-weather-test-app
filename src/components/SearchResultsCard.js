@@ -3,21 +3,49 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import { LineChart, XAxis, Tooltip, CartesianGrid, Line, YAxis, Legend } from 'recharts';
 
-function SearchResultsCard({ query = "test", weather  }) {
+function SearchResultsCard({ query, weather }) {
+    const tempForecast = weather.forecast.map((el) => ({ celsius: el.main.temp, name: el.dt_txt }));
+
+    // Отобразить среднюю температуру за 5 дней
+    // Самостоятельно найти библиотеку с графиками(charts) на реакте(!) и добавить в 
+    // отдельную ветку карточку с графиком
+
+    // Calc average temp
+    // [1, 2, 3] => 2
+    const tempAverage = tempForecast.reduce((accumulator, currentValue) => (accumulator + currentValue.celsius), 0) / tempForecast.length;
+    const tempAverageRound = Math.round(tempAverage * 10) / 10;
+    console.log(weather.forecast)
+    console.log(tempForecast)
+
+
     return (
-        <Card>
+        <Card className="card">
             <CardActionArea>
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                        {query} 
+                        {query}, {weather.country}
                     </Typography>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        {weather.weatherType}
+                    <Typography gutterBottom variant="body1">
+                        Average temp {tempAverageRound} Cº
                     </Typography>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        {weather.temp} C
-                    </Typography>
+                    <LineChart
+                        width={640}
+                        height={300}
+                        data={tempForecast}
+                        margin={{
+                            top: 5, right: 30, left: 20, bottom: 5,
+                        }}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Line type="monotone" dataKey="celsius" stroke="#8884d8" activeDot={{ r: 8 }} />
+                    </LineChart>
+
                 </CardContent>
             </CardActionArea>
         </Card>
