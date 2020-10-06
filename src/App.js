@@ -10,6 +10,7 @@ function App() {
   const [weather, setWeather] = React.useState({
     forecast: []
   });
+  const [cities, setCities] = React.useState([]);
 
   const onInputChangeCallback = event => {
     setQuery(event.target.value)
@@ -17,10 +18,15 @@ function App() {
   const onSubmitSeachFormCallback = (event) => {
     event.preventDefault();
     fetchWeather(query).then(data => {
-      setWeather({
+      const city = {
+        query: query,
         country: data.city.country,
         forecast: data.list
-      })
+      };
+
+      const newCities = [city, ...cities];
+      setWeather(city);
+      setCities(newCities);
     })
   }
   return (
@@ -31,9 +37,10 @@ function App() {
         query={query}
       />
 
-      {query && (
-        <SearchResuldCard query={query} weather={weather} />
-      )}
+      {
+        cities.map(weather => <SearchResuldCard query={weather.query} weather={weather} />)
+      }
+
     </>
 
   );
