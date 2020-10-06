@@ -8,17 +8,11 @@ import { LineChart, XAxis, Tooltip, CartesianGrid, Line, YAxis, Legend } from 'r
 function SearchResultsCard({ query, weather }) {
     const tempForecast = weather.forecast.map((el) => ({ celsius: el.main.temp, name: el.dt_txt }));
 
-    // Отобразить среднюю температуру за 5 дней
-    // Самостоятельно найти библиотеку с графиками(charts) на реакте(!) и добавить в 
-    // отдельную ветку карточку с графиком
+    // Сравнить температуру в течение дня между 5 днями
+    // => Взять температуру за каждый день и отобразить на графике (5 графиков)
 
-    // Calc average temp
-    // [1, 2, 3] => 2
     const tempAverage = tempForecast.reduce((accumulator, currentValue) => (accumulator + currentValue.celsius), 0) / tempForecast.length;
     const tempAverageRound = Math.round(tempAverage * 10) / 10;
-    console.log(weather.forecast)
-    console.log(tempForecast)
-
 
     return (
         <Card className="card">
