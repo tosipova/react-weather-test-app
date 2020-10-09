@@ -7,7 +7,7 @@ import './App.css';
 
 function App() {
   const [query, setQuery] = React.useState('Corfu');
-  const [cities, setCities] = React.useState([]);
+  const [cities, setCities] = React.useState(JSON.parse(localStorage.getItem('cities')) || []);
 
   // TODO*: Добавь функцию, которая позволяет добавлять N городов при старте проекта
 
@@ -25,6 +25,7 @@ function App() {
 
       // TODO: Если у нас уже есть город === query, его не добавлять в массив
       const newCities = [city, ...cities];
+      localStorage.setItem('cities', JSON.stringify(newCities));
       setCities(newCities);
     })
   }

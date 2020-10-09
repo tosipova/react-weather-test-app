@@ -27,7 +27,6 @@ function SearchResultsCard({ name, country, forecast, index, onRemove }) {
     }
 
     // TODO: Взять температуру за каждый день и отобразить на графике (5 lines на одном чарте)
-    // TODO: Заменить кнопку Remove на иконку и разместить рядом с name, country
 
     const data = [
         {
