@@ -7,10 +7,9 @@ import './App.css';
 
 function App() {
   const [query, setQuery] = React.useState('Corfu');
-  const [weather, setWeather] = React.useState({
-    forecast: []
-  });
   const [cities, setCities] = React.useState([]);
+
+  // TODO*: Добавь функцию, которая позволяет добавлять N городов при старте проекта
 
   const onInputChangeCallback = event => {
     setQuery(event.target.value)
@@ -19,16 +18,35 @@ function App() {
     event.preventDefault();
     fetchWeather(query).then(data => {
       const city = {
-        query: query,
+        name: query,
         country: data.city.country,
         forecast: data.list
       };
 
+      // TODO: Если у нас уже есть город === query, его не добавлять в массив
       const newCities = [city, ...cities];
-      setWeather(city);
       setCities(newCities);
     })
   }
+
+  const onRemoveCity = index => {
+    // const formattedCities = [...cities];
+    // formattedCities.splice(index, 1);
+
+    // const formattedCities = [...cities.slice(0, index), ...cities.slice(index + 1)];
+
+    const formattedCities = cities.filter((currentCity, currentCityIndex) => {
+      // index === currentCityIndex => false
+      // index !== currentCityIndex => true
+
+      return index !== currentCityIndex;
+
+    });
+
+    setCities(formattedCities);
+  };
+
+
   return (
     <>
       <SearchForm
@@ -37,8 +55,16 @@ function App() {
         query={query}
       />
 
+
       {
-        cities.map(weather => <SearchResuldCard query={weather.query} weather={weather} />)
+        cities.map((city, index) => <SearchResuldCard
+          key={city.name}
+          name={city.name}
+          country={city.country}
+          forecast={city.forecast}
+          index={index}
+          onRemove={onRemoveCity}
+        />)
       }
 
     </>
