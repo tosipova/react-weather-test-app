@@ -1,32 +1,64 @@
 import React from 'react';
+
+import LocalStorage from './services/local-storage';
+import fetchWeather from './services/fetch-weather';
+
 import SearchForm from './components/SearchForm';
-import fetchWeather from './services/fetchWeather';
 import SearchResuldCard from './components/SearchResultsCard';
+
 import './App.css';
 
 
 function App() {
-  const [query, setQuery] = React.useState('Corfu');
-  const [cities, setCities] = React.useState(JSON.parse(localStorage.getItem('cities')) || []);
+  const [query, setQuery] = React.useState('');
+  const initialCityValue = JSON.parse(LocalStorage.get('cities')) || [];
+  const [cities, setCities] = React.useState(initialCityValue);
 
-  // TODO*: Добавь функцию, которая позволяет добавлять N городов при старте проекта
-
-  const onInputChangeCallback = event => {
-    setQuery(event.target.value)
-  }
-  const onSubmitSeachFormCallback = (event) => {
-    event.preventDefault();
-    fetchWeather(query).then(data => {
+  const getWeather = options => {
+    return fetchWeather(options).then(data => {
       const city = {
-        name: query,
+        name: data.city.name,
         country: data.city.country,
         forecast: data.list
       };
 
-      // TODO: Если у нас уже есть город === query, его не добавлять в массив
-      const newCities = [city, ...cities];
-      localStorage.setItem('cities', JSON.stringify(newCities));
+      const filtered = cities.filter((city) => city.name !== query)
+
+      const newCities = [city, ...filtered]; // => [{}, ...[{}, {}, {}]]
+
+      LocalStorage.set('cities', JSON.stringify(newCities));
       setCities(newCities);
+    })
+  }
+
+  React.useEffect(() => {
+    if (navigator && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(result => {
+        const lat = result.coords.latitude;
+        const lon = result.coords.longitude;
+
+        getWeather({
+          lon,
+          lat
+        })
+      });
+    }
+
+  }, [])
+
+  // TODO*: Добавь функцию, которая позволяет добавлять N городов при старте проекта
+
+  // const onInputChangeCallback = query => {
+  //   console.log(event.target.value);
+  //   setQuery(query);
+  // }
+  const onSubmitSeachFormCallback = event => {
+    if (event) {
+      event.preventDefault();
+    }
+
+    getWeather({
+      q: query
     })
   }
 
@@ -52,7 +84,9 @@ function App() {
     <>
       <SearchForm
         onSubmit={onSubmitSeachFormCallback}
-        onChange={onInputChangeCallback}
+        // onChange={onInputChangeCallback}
+        onChange={setQuery}
+
         query={query}
       />
 
