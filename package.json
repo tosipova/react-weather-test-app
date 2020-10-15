@@ -10,7 +10,6 @@
     "@testing-library/user-event": "^7.2.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-google-autocomplete": "^1.2.6",
     "react-scripts": "3.4.3",
     "react-sparklines": "^1.7.0",
     "recharts": "^1.8.5"

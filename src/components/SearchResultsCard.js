@@ -13,27 +13,20 @@ function SearchResultsCard({ name, country, forecast, index, onRemove }) {
         const date = new Intl.DateTimeFormat('de').format(new Date(currentValue.dt_txt));
 
         if (!(accumulator[arrIdx])) {
-            accumulator.push({}); // [{}, {}, {}]
+            accumulator.push({}); 
         }
 
         if (!(accumulator[arrIdx].name)) {
             const time = new Intl.DateTimeFormat('de', { hour: 'numeric', minute: "numeric" }).format(new Date(currentValue.dt_txt));
 
-            accumulator[arrIdx].name = time // '9:00 AM'
+            accumulator[arrIdx].name = time
         }
 
         accumulator[arrIdx][date] = currentValue.main.temp;
-
-
-        // let lastArrIdx = accumulator.length - 1;
-        // if (!(idx % 8)) {
-        //     accumulator.push([]);
-        //     lastArrIdx += 1;
-        // }
-        // accumulator[lastArrIdx].push(currentValue);
-
         return accumulator;
+
     }, []);
+
     const days = Object.keys(tempForecastByDay[0]).filter(currentValue => currentValue !== 'name'); // ['10/12/2020', 'name', '11/12/2020'] => ['10/12/2020', '11/12/2020']
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', 'DC143C'];
 
@@ -43,9 +36,6 @@ function SearchResultsCard({ name, country, forecast, index, onRemove }) {
     const onRemoveCity = () => {
         return onRemove(index);
     }
-
-    // TODO: Взять температуру за каждый день и отобразить на графике (5 lines на одном чарте)
-
     return (
         <Card className="card">
             <CardContent>

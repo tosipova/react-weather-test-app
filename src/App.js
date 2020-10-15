@@ -22,21 +22,19 @@ function App() {
         forecast: data.list
       };
 
-      const filtered = cities.filter((city) => city.name !== query)
+      const filtered = cities.filter(({ name }) => name !== city.name)
 
-      const newCities = [city, ...filtered]; // => [{}, ...[{}, {}, {}]]
+      const newCities = [city, ...filtered];
 
       LocalStorage.set('cities', JSON.stringify(newCities));
       setCities(newCities);
     })
   }
-
   React.useEffect(() => {
     if (navigator && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(result => {
         const lat = result.coords.latitude;
         const lon = result.coords.longitude;
-
         getWeather({
           lon,
           lat
@@ -46,12 +44,6 @@ function App() {
 
   }, [])
 
-  // TODO*: Добавь функцию, которая позволяет добавлять N городов при старте проекта
-
-  // const onInputChangeCallback = query => {
-  //   console.log(event.target.value);
-  //   setQuery(query);
-  // }
   const onSubmitSeachFormCallback = event => {
     if (event) {
       event.preventDefault();
@@ -63,43 +55,35 @@ function App() {
   }
 
   const onRemoveCity = index => {
-    // const formattedCities = [...cities];
-    // formattedCities.splice(index, 1);
-
-    // const formattedCities = [...cities.slice(0, index), ...cities.slice(index + 1)];
-
     const formattedCities = cities.filter((currentCity, currentCityIndex) => {
-      // index === currentCityIndex => false
-      // index !== currentCityIndex => true
-
       return index !== currentCityIndex;
-
     });
 
     setCities(formattedCities);
   };
 
-
   return (
     <>
       <SearchForm
         onSubmit={onSubmitSeachFormCallback}
-        // onChange={onInputChangeCallback}
-        onChange={setQuery}
-
+        onChange={value => {
+          console.log(value);
+          setQuery(value);
+        }}
         query={query}
       />
 
-
       {
-        cities.map((city, index) => <SearchResuldCard
-          key={city.name}
-          name={city.name}
-          country={city.country}
-          forecast={city.forecast}
-          index={index}
-          onRemove={onRemoveCity}
-        />)
+        cities.map((city, index) => {
+          return (
+            <SearchResuldCard
+              key={city.name}
+              index={index}
+              onRemove={onRemoveCity}
+              {...city}
+            />
+          )
+        })
       }
 
     </>
